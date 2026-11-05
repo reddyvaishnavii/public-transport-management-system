@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #0a1929; color: #f0f4f8; }
+        .section { background: #102640; border: 1px solid #1f3b5b; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+        h1, h2, h3 { margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #1f3b5b; padding: 8px; text-align: left; }
+        th { background: #153555; }
+        input, select, button { padding: 8px; margin: 4px 0; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .stat { background: #153555; padding: 10px; border-radius: 8px; }
+        a { color: #00d4aa; }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+<h1>Admin Home</h1>
+
+<div class="section stats">
+    <div class="stat"><strong>Routes</strong><div th:text="${#lists.size(routes)}">0</div></div>
+    <div class="stat"><strong>Buses</strong><div th:text="${#lists.size(buses)}">0</div></div>
+    <div class="stat"><strong>Drivers</strong><div th:text="${driverCount}">0</div></div>
+    <div class="stat"><strong>Bookings</strong><div th:text="${#lists.size(bookings)}">0</div></div>
+</div>
+
+<div class="section">
+    <h2>Routes</h2>
+    <table>
+        <thead><tr><th>ID</th><th>Source</th><th>Destination</th><th>Distance(Km)</th></tr></thead>
+        <tbody>
+        <tr th:each="r : ${routes}">
+            <td th:text="${r.id}"></td><td th:text="${r.source}"></td><td th:text="${r.destination}"></td><td th:text="${r.distance}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <h2>Buses</h2>
+    <table>
+        <thead><tr><th>ID</th><th>Number</th><th>Capacity</th></tr></thead>
+        <tbody>
+        <tr th:each="b : ${buses}">
+            <td th:text="${b.id}"></td><td th:text="${b.number}"></td><td th:text="${b.capacity}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- <div class="grid">
+    <div class="section">
+        <h3>Journey Operations</h3>
+        <p>Use one flow for assignment and one dedicated page for scheduling.</p>
+        <p><a th:href="@{/admin/assign-journey}">Assign Journey</a></p>
+        <p><a th:href="@{/admin/schedule-fleet}">Schedule Fleet</a></p>
+    </div>
+</div> -->
+
+<div class="grid">
+    <div class="section">
+        <h3>Booking Count by Route</h3>
+        <table>
+            <thead><tr><th>Route</th><th>Count</th></tr></thead>
+            <tbody>
+            <tr th:each="row : ${bookingCountsByRoute}">
+                <td th:text="${row.route}"></td>
+                <td th:text="${row.count}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h3>Booking Count by Bus</h3>
+        <table>
+            <thead><tr><th>Bus ID</th><th>Count</th></tr></thead>
+            <tbody>
+            <tr th:each="row : ${bookingCountsByBus}">
+                <td th:text="${row.busId}"></td>
+                <td th:text="${row.count}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Schedules</h2>
+    <table>
+        <thead><tr><th>ID</th><th>Bus ID</th><th>Route</th><th>Driver Email</th><th>Departure</th><th>Arrival</th><th>Date</th></tr></thead>
+        <tbody>
+        <tr th:each="s : ${schedules}">
+            <td th:text="${s.id}"></td>
+            <td th:text="${s.busId}"></td>
+            <td th:text="${s.route != null ? s.route.source + ' -> ' + s.route.destination : 'N/A'}"></td>
+            <td th:text="${s.driverEmail}"></td>
+            <td th:text="${s.departureTime}"></td>
+            <td th:text="${s.arrivalTime}"></td>
+            <td th:text="${s.travelDate}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
